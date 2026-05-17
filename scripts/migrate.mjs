@@ -1,13 +1,20 @@
 // Run: npm run db:migrate
-// Requires POSTGRES_URL in .env.local (copied from Vercel dashboard)
-import { config } from 'dotenv';
-config({ path: '.env.local' });
+// Requires .env.production — run `npx vercel env pull .env.production --environment=production` first
 
-const { sql } = await import('@vercel/postgres');
+import pg from 'pg';
+
+const url = process.env.POSTGRES_URL_NON_POOLING ?? process.env.POSTGRES_URL;
+if (!url) {
+  console.error('No POSTGRES_URL_NON_POOLING or POSTGRES_URL found');
+  process.exit(1);
+}
+
+const client = new pg.Client({ connectionString: url, ssl: { rejectUnauthorized: false } });
+await client.connect();
 
 console.log('Running migration…');
 
-await sql`
+await client.query(`
   CREATE TABLE IF NOT EXISTS licenses (
     id          SERIAL PRIMARY KEY,
     key         TEXT UNIQUE NOT NULL,
@@ -18,9 +25,10 @@ await sql`
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     revoked     BOOLEAN NOT NULL DEFAULT FALSE
   )
-`;
+`);
 
-await sql`CREATE INDEX IF NOT EXISTS idx_licenses_key ON licenses(key)`;
+await client.query(`CREATE INDEX IF NOT EXISTS idx_licenses_key ON licenses(key)`);
 
+await client.end();
 console.log('✓ Table licenses ready');
 process.exit(0);

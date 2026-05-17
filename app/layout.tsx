@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'iStack CLI — iOS AI Builder',
   description: 'The AI-powered CLI for shipping native iOS apps. Built by imprimerie.',
-  metadataBase: new URL('https://istack.dev'),
+  metadataBase: new URL('https://project-9sli3.vercel.app'),
   openGraph: {
     title: 'iStack CLI',
     description: 'The AI-powered CLI for shipping native iOS apps.',

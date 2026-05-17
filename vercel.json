@@ -2,9 +2,5 @@
   "framework": "nextjs",
   "buildCommand": "next build",
   "devCommand": "next dev",
-  "installCommand": "npm install",
-  "env": {
-    "LICENSE_KEY_HALF": "@license_key_half",
-    "ADMIN_SECRET":     "@admin_secret"
-  }
+  "installCommand": "npm install"
 }
